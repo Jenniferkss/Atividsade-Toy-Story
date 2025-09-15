@@ -2,13 +2,19 @@ import dados from "../models/dados.js"
 const {personagens} = dados; 
 
 const getAllPersonagens = (req,res) => {
-    const resultado = personagens;
+    const {cor} = req.query;
+    let resultado = personagens 
+    
+    if (cor) {
+        resultado = resultado.filter((c) => c.cor.toLowerCase() === cor.toLowerCase())
+    }
     res.status(200).json({
-        total: resultado.lenght,
-        personagens: resultado
-    })
-};
+       total: resultado.length,
+       sucess: true,
+       data: resultado
 
+    })
+}
 const getPersonagensById = (req,res)=> {
     let id = parseInt(req.params.id);
 
@@ -105,6 +111,15 @@ res.status(200).json({
     message: `Dados do Personagem ID ${idParaEditar} atualizados com sucesso!`,
     personagem: personagemNova
 })
-}
+};
 
-export {getAllPersonagens, getPersonagensById, createpersonagem,deletePersonagem,updatePersonagem}
+const getPersonagensPorCor = (req,res)=> {
+    let cor = parseInt(req.params.cor);
+
+    const personagem = personagens.find(p => p.cor === cor);
+    res.status(200).json({
+        sucess:true,
+       personagem: personagem
+    })
+};
+export {getAllPersonagens, getPersonagensById, createpersonagem,deletePersonagem,updatePersonagem,getPersonagensPorCor}
